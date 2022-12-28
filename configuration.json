@@ -1,0 +1,9 @@
+{
+  "db": {
+    "Host": "localhost:3306",
+    "DatabaseName": "Retask",
+    "Username": "root",
+    "Password": "password"
+  },
+  "ServerPort": 5000
+}

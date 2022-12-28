@@ -1,0 +1,36 @@
+import PaginatedList from "./PaginatedList";
+import RecordsInterface from "../../Application/Common/Interfaces/RecordsInterface";
+
+export default class Records<T> implements RecordsInterface<T>{
+
+    private readonly Data: Array<T>
+
+    constructor(data: Array<T>) {
+        this.Data = data;
+    }
+
+    First(): (T|null) {
+        return (this.Data.length > 0) ? this.Data[0] : null;
+    }
+
+    All(): Array<T> {
+        return this.Data;
+    }
+
+    Where(callback: (single: T) => boolean): Records<T> {
+        return new Records<T>(this.Data.filter(callback));
+    }
+
+    Select<R>(callback: (single: T) => R): Records<R> {
+        return new Records<R>(this.Data.map<R>(callback));
+    }
+
+    Last(): (T|null) {
+        return (this.Data.length > 0) ? this.Data[this.Data.length - 1] : null;
+    }
+
+    PaginatedList(pageNumber: number, pageSize: number): PaginatedList<T> {
+        return new PaginatedList<T>().Create(this.Data, pageNumber, pageSize)
+    }
+
+}
