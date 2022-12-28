@@ -1,23 +1,30 @@
-import DatabaseInterface from "../../Application/Common/Interfaces/DatabaseInterface";
 import Records from "./Record";
 import mysql from 'mysql';
-import DBTable from "./DBTable";
-import Category from "../../Domain/Entities/Category";
+import Connection from "mysql2/typings/mysql/lib/Connection";
 
 export default class Database {
 
-    static Connection: any
+    public Connection: any = null;
+    private readonly Configuration: any = null;
 
-    static async Query<T>(query: string, param?: Array<any>): Promise<Records<T>> {
-        const [results, ] = await Database.Connection.execute(query, param ?? []);
-        return new Records<T>(results);
-        //todo: implement Database query method
-        throw new Error("not implemnted");
+    constructor(configuration: any){
+        this.Configuration = configuration;
     }
 
-    async Connect(configuration: any){
-        Database.Connection = await mysql.createConnection(configuration);
-        return this;
+    async Query<T>(query: string, param?: Array<any>): Promise<Records<T>> {
+
+        await this.Connect();
+        const [results, ] = await this.Connection.execute(query, param ?? []);
+        return new Records<T>(results);
+
+    }
+
+    private async Connect(){
+        
+        if(!Connection){
+            this.Connection = await mysql.createConnection(this.Configuration);
+        }
+
     }
 
 }

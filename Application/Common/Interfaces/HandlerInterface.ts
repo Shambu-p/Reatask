@@ -9,5 +9,5 @@ export default interface HandlerInterface<Request, Response> {
      * @returns Response
      *  will return the specified type of object
      */
-    Handle(request: Request): Response
+    Handle(request: Request): Promise<Response>
 }

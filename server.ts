@@ -15,7 +15,7 @@ try{
 
     const configuration = new ConfigurationService("./configuration.json");
     const port = configuration.getConfiguration("ServerPort");
-    const infrastructure = await InfrastructureLibrary(configuration);
+    const infrastructure = InfrastructureLibrary(configuration);
     const application = ApplicationLibrary(infrastructure.Database, infrastructure.Authentication);
 
     // app.use(cors());

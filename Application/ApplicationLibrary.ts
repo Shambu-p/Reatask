@@ -1,4 +1,3 @@
-import DatabaseInterface from "./Common/Interfaces/DatabaseInterface";
 import AuthenticationInterface from "./Common/Interfaces/AuthenticationInterface";
 import {
     CreateCategoryCommand,
@@ -6,8 +5,9 @@ import {
 } from "./CategoryModule/Commands/CreateCategoryCommand/CreateCategoryLogic";
 import Response from "./Common/Response";
 import CreateCategoryValidator from "./CategoryModule/Commands/CreateCategoryCommand/CreateCategoryValidator";
+import IContext from "./Common/Interfaces/IContext";
 
-module.exports = function (db: DatabaseInterface, auth: AuthenticationInterface) {
+module.exports = function (db: IContext, auth: AuthenticationInterface) {
     return {
         Database: db,
         Authentication: auth,
@@ -16,9 +16,9 @@ module.exports = function (db: DatabaseInterface, auth: AuthenticationInterface)
          * this method could throw validation errors
          * @param command
          */
-        createCategoryRequest: function (command: CreateCategoryCommand): Response {
+        createCategoryRequest: async function (command: CreateCategoryCommand): Promise<Response> {
             new CreateCategoryValidator(command).Validate();
-            return new CreateCategoryLogic(this.Database).Handle(command);
+            return await new CreateCategoryLogic(this.Database).Handle(command);
         }
     }
 };

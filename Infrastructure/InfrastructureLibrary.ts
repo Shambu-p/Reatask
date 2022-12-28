@@ -1,23 +1,16 @@
 import ConfigurationService from "../Services/ConfigurationService";
 import Database from "./DBModels/Database";
 import Authentication from "./Authentication/Authentication";
-import DatabaseInterface from "../Application/Common/Interfaces/DatabaseInterface";
 import AuthenticationInterface from "../Application/Common/Interfaces/AuthenticationInterface";
+import DBContext from "./DBModels/DBContext";
 
 export default async function (config: ConfigurationService): Promise<{
-    Database: DatabaseInterface,
+    Database: DBContext,
     Authentication: AuthenticationInterface
 }> {
-
-    let connection: Database = new Database();
-    try{
-        await connection.Connect(config.getConfiguration("db"))
-    }catch (error) {
-        throw new Error(`Database connection failed ${error.message}`)
-    }
-
+    
     return {
-        Database: connection,
+        Database: new DBContext(new Database(config.getConfiguration("db"))),
         Authentication: new Authentication()
     }
 

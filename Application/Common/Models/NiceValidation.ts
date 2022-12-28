@@ -7,7 +7,7 @@ export default class NiceValidation<T> {
 
     constructor(command: T) {
         this.Command = command;
-        this.Props = new Map<string, any>(Object.entries(command));
+        this.Props = new Map<string, any>(Object.entries(new Object(command)));
     }
 
     Rule(propertyName: string, callback: (validator: ABValidator) => ABValidator): void {

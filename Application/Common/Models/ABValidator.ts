@@ -1,7 +1,7 @@
 
 export default class ABValidator {
 
-    private Message: Array<string>;
+    private Message: Array<string> = [];
     private readonly Property: any
     private readonly Parameter: string
     Result = true;

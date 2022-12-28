@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "web based task management application",
   "main": "server.ts",
-  "type": "module",
   "scripts": {
     "test": "node-test",
     "build": "tsc",
