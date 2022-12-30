@@ -13,11 +13,11 @@ export default class PaginatedList<T> implements PaginatedListInterface<T> {
         this.PageSize = pageSize;
         this.PageNumber = pageNumber;
 
-        let startIndex = pageNumber * pageSize;
+        let startIndex = (pageNumber - 1) * pageSize;
         let endIndex = startIndex + pageSize;
 
-        if(startIndex < list.length && startIndex >= 0 && endIndex < list.length && endIndex > 0){
-            this.Items = list.slice(pageNumber * pageSize, (pageNumber * pageSize) + pageSize);
+        if(startIndex < list.length && startIndex >= 0 && endIndex > 0){
+            this.Items = list.slice(startIndex, (((endIndex + 1) <= list.length) ? endIndex + 1 : list.length));
         } else {
             throw new Error("Incorrect pagination!");
         }

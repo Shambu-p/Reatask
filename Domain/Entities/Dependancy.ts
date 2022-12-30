@@ -1,5 +1,5 @@
 
-export default class Dependancy {
+export default interface Dependancy {
     Id: number
     Dependant: number
     DependsOn: number

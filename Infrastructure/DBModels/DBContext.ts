@@ -8,6 +8,6 @@ export default class DBContext extends ContextModel implements IContext {
 
     constructor(db: Database){ super(db); }
 
-    public Categories = this.getTable<Category>("Category");
+    public Categories = this.getTable<Category>("Categories");
 
 }

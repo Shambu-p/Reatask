@@ -3,6 +3,7 @@ import express from 'express';
 import fs, { appendFile } from 'fs';
 import InfrastructureLibrary from "./Infrastructure/InfrastructureLibrary";
 import ApplicationLibrary from "./Application/ApplicationLibrary";
+import bodyParser from "body-parser";
 
 const app = express();
 const router = express.Router();
@@ -15,9 +16,19 @@ try{
     const application = ApplicationLibrary(infrastructure.Database, infrastructure.Authentication);
 
     // app.use(cors());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(bodyParser.json());
+
+    app.use(async (req, res, next) => {
+        console.log("pre pip");
+        next();
+    });
 
     app.get("/", async (req, res, next) => {
-        
+        res.json({
+            statusCode: 200,
+            message: "Wellcome to Retask REST API developed with node js, express using Clean Architecture Design patter."
+        });
     });
 
     fs.readdirSync("Controllers").forEach(function (file) {

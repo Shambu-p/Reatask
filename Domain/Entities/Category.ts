@@ -1,5 +1,5 @@
 
-export default class Category {
-    Id: number
+export default interface Category {
+    Id: number|null
     Name: string
 }

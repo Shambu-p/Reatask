@@ -1,5 +1,5 @@
 import Records from "./Record";
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 // import Connection from "mysql2/typings/mysql/lib/Connection";
 
 export default class Database {
@@ -11,10 +11,12 @@ export default class Database {
         this.Configuration = configuration;
     }
 
-    async Query<T>(query: string, param?: Array<any>): Promise<Records<T>> {
+    async Query<T>(query: string, param?: (any)): Promise<Records<T>> {
 
         await this.Connect();
-        const [results, ] = await this.Connection.execute(query, param ?? []);
+        this.Connection.config.namedPlaceholders = true;
+        const [results, fields] = await this.Connection.execute(query, param ?? {});
+        // console.log(fields[0].name);
         return new Records<T>(results);
 
     }

@@ -36,16 +36,16 @@ export default class DBTable<T> implements IDBTable<T> {
     }
 
     private getAddSingleQuery(obj: any, index = 0): {
-        values: Array<[string, any]>,
+        values: any,
         valuesQuery: string
     } {
         
         let placehoders: Array<string> = [];
-        let parameters: Array<[string, any]> = [];
+        let parameters: any = {};
         
         Object.entries(obj).forEach(([key, value]) => {
-            placehoders.push(`@column${index}_${key}`);
-            parameters.push([`@column${index}_${key}`, value]);
+            placehoders.push(`:column${index}_${key}`);
+            parameters[`column${index}_${key}`] = value;
         });
 
         return {
@@ -68,13 +68,14 @@ export default class DBTable<T> implements IDBTable<T> {
                 columns = Object.keys(obj);
             }
 
-            let res = this.getAddSingleQuery(obj);
+            let res = this.getAddSingleQuery(obj, index);
             valuesQuery.push(res.valuesQuery);
-            res.values.forEach(([k, v]) => {
-                if(!values.has(k)){
-                    values.set(k, v)
-                }
-            });
+            values = {...values, ...res.values}
+            // res.values.forEach(([k, v]) => {
+            //     if(!values.has(k)){
+            //         values.set(k, v)
+            //     }
+            // });
             
         });
         
@@ -100,10 +101,10 @@ export default class DBTable<T> implements IDBTable<T> {
 
     private getSingleRecordUpdate(obj: any, index = 0): {
         query: string,
-        parameters: Array<[string, any]>
+        parameters: any
     } {
 
-        let values: Array<[string, any]> = [];
+        let values: any = {};
         let sets: Array<string> = [];
         let pkValue = null;
 
@@ -114,8 +115,8 @@ export default class DBTable<T> implements IDBTable<T> {
                 return;
             }
 
-            sets.push(`${key} = @column${index}_${key}`);
-            values.push([`@column${index}_${key}`, value]);
+            sets.push(`${key} = :column${index}_${key}`);
+            values[`column${index}_${key}`] = value;
 
         });
 
@@ -133,14 +134,14 @@ export default class DBTable<T> implements IDBTable<T> {
     private async UpdateRange<T>(records: Array<T>): Promise<boolean> {
 
         let queries: Array<string> = [];
-        let values: Array<[string, any]> = [];
+        let values: any = {};
 
         records.forEach((record, index) => {
 
             let res = this.getSingleRecordUpdate(new Object(record), index);
 
             queries.push(res.query);
-            values = values.concat(res.parameters);
+            values = {...values, ...res.parameters};
 
         });
 
@@ -155,8 +156,8 @@ export default class DBTable<T> implements IDBTable<T> {
             return await this.DeleteRange(pk);
         }
 
-        let query = `delete from ${this.TableName} where ${this.PrimaryKey} = @pk`;
-        await this.DB.Query(query, [["@pk", pk]]);
+        let query = `delete from ${this.TableName} where ${this.PrimaryKey} = :pk`;
+        await this.DB.Query(query, {"pk": pk});
         return true;
 
     }
@@ -164,17 +165,14 @@ export default class DBTable<T> implements IDBTable<T> {
     async DeleteRange(pk: Array<number|string>): Promise<boolean> {
         
         let queries: Array<string> = [];
-        let values: Array<[string, any]> = [];
+        let values: any = {};
         
         pk.forEach((p, i) => {
-            queries.push(`${this.PrimaryKey} = @pk${i}`);
-            values.push([`@pk${i}`, p]);
+            queries.push(`${this.PrimaryKey} = :pk${i}`);
+            values[`pk${i}`] = p;
         });
 
-        await this.DB.Query(
-            `delete from ${this.TableName} where ${queries.join(" or ")}`,
-            values
-        );
+        await this.DB.Query(`delete from ${this.TableName} where ${queries.join(" or ")}`, values);
         return true;
 
     }

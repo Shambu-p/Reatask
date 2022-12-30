@@ -16,7 +16,9 @@ export default class NiceValidation<T> {
             throw new Error(`property named ${propertyName} is not defined!`)
         }
 
-        let res = callback(new ABValidator(this.Props.get(propertyName), propertyName));
+        // console.log(this.Props.get(propertyName));
+        // console.log(propertyName);
+        let res = callback(new ABValidator(propertyName, this.Props.get(propertyName)));
         if(!res.Result){
             throw new Error(res.getMessage());
         }

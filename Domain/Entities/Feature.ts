@@ -1,5 +1,5 @@
 
-export default class Feature {
+export default interface Feature {
     Id: number
     Name: string
     Description: string

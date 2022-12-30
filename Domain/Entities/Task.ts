@@ -1,5 +1,4 @@
-
-export default class Task {
+export default interface Task {
     Id: number
     Name: string
     FeatureId: number
