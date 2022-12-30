@@ -7,7 +7,7 @@ export default class PaginatedList<T> implements PaginatedListInterface<T> {
     PageSize: number
     TotalCount: number
 
-    Create(list: Array<T>, pageNumber, pageSize): PaginatedList<T> {
+    private constructor(list: Array<T>, pageNumber: number, pageSize: number) {
 
         this.TotalCount = list.length;
         this.PageSize = pageSize;
@@ -24,6 +24,10 @@ export default class PaginatedList<T> implements PaginatedListInterface<T> {
 
         return this;
 
+    }
+
+    static Create<R>(list: R[], pageNumber: number, pageSize: number): PaginatedListInterface<R> {
+        return new PaginatedList<R>(list, pageNumber, pageSize);
     }
 
 }

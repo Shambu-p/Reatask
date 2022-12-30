@@ -7,7 +7,7 @@ import Response from "./Common/Response";
 import CreateCategoryValidator from "./CategoryModule/Commands/CreateCategoryCommand/CreateCategoryValidator";
 import IContext from "./Common/Interfaces/IContext";
 
-module.exports = function (db: IContext, auth: AuthenticationInterface) {
+export default function (db: IContext, auth: AuthenticationInterface) {
     return {
         Database: db,
         Authentication: auth,

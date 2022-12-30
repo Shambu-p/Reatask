@@ -8,9 +8,9 @@ export default class CreateCategoryValidator extends NiceValidation<CreateCatego
     }
 
     Validate() {
-        this.Rule("name", prop =>
+        this.Rule("Name", prop =>
             prop.MaxLength(10)
-                .MinLength(6)
+                .MinLength(2)
         );
     }
 }

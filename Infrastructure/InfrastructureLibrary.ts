@@ -4,10 +4,10 @@ import Authentication from "./Authentication/Authentication";
 import AuthenticationInterface from "../Application/Common/Interfaces/AuthenticationInterface";
 import DBContext from "./DBModels/DBContext";
 
-export default async function (config: ConfigurationService): Promise<{
+export default function lib (config: ConfigurationService): {
     Database: DBContext,
     Authentication: AuthenticationInterface
-}> {
+} {
     
     return {
         Database: new DBContext(new Database(config.getConfiguration("db"))),

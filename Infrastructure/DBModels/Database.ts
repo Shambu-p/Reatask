@@ -1,6 +1,6 @@
 import Records from "./Record";
-import mysql from 'mysql';
-import Connection from "mysql2/typings/mysql/lib/Connection";
+const mysql = require('mysql2');
+// import Connection from "mysql2/typings/mysql/lib/Connection";
 
 export default class Database {
 
@@ -21,7 +21,7 @@ export default class Database {
 
     private async Connect(){
         
-        if(!Connection){
+        if(!this.Connection){
             this.Connection = await mysql.createConnection(this.Configuration);
         }
 

@@ -21,7 +21,7 @@ export default class DBTable<T> implements IDBTable<T> {
     async Add<T>(record: (T|Array<T>)): Promise<boolean> {
 
         if(Array.isArray(record)){
-            return this.AddRange(record);
+            return await this.AddRange(record);
         }
 
         let obj = new Object(record);
@@ -86,24 +86,97 @@ export default class DBTable<T> implements IDBTable<T> {
         
     }
 
-    Update<T>(record: T): Promise<boolean> {
-        //todo: implement update single record method
-        throw new Error("not implemented yet!");
+    async Update<T>(record: (T|Array<T>)): Promise<boolean> {
+
+        if(Array.isArray(record)){
+            return await this.UpdateRange(record);
+        }
+
+        let result = this.getSingleRecordUpdate(new Object(record));
+        await this.DB.Query(result.query, result.parameters);
+        return true;
+
     }
 
-    UpdateRange<T>(records: (Array<T>|T)): boolean {
-        //todo: implement update multiple records method
-        throw new Error("not implemented yet!");
+    private getSingleRecordUpdate(obj: any, index = 0): {
+        query: string,
+        parameters: Array<[string, any]>
+    } {
+
+        let values: Array<[string, any]> = [];
+        let sets: Array<string> = [];
+        let pkValue = null;
+
+        Object.entries(obj).forEach(([key, value]) => {
+            
+            if(key == this.PrimaryKey){
+                pkValue = value;
+                return;
+            }
+
+            sets.push(`${key} = @column${index}_${key}`);
+            values.push([`@column${index}_${key}`, value]);
+
+        });
+
+        if(pkValue == null){
+            throw new Error(`for the primary key named ${this.PrimaryKey} value is not set in the table named ${this.TableName}`);
+        }
+
+        return {
+            query: `update ${this.TableName} set ${sets.join(", ")} where ${this.PrimaryKey} = ${pkValue}`,
+            parameters: values
+        };
+
     }
 
-    Delete(pk: (number|string)): Promise<boolean> {
-        //todo: implement record delete method
-        throw new Error("not implemented yet!");
+    private async UpdateRange<T>(records: Array<T>): Promise<boolean> {
+
+        let queries: Array<string> = [];
+        let values: Array<[string, any]> = [];
+
+        records.forEach((record, index) => {
+
+            let res = this.getSingleRecordUpdate(new Object(record), index);
+
+            queries.push(res.query);
+            values = values.concat(res.parameters);
+
+        });
+
+        await this.DB.Query(queries.join("; "), values);
+        return true;
+
     }
 
-    DeleteRange(pk: Array<number|string>){
-        //todo: implement delete multiple records method
-        throw new Error("not implemented yet!");
+    async Delete(pk: ((number|string)|Array<(number|string)>)): Promise<boolean> {
+        
+        if(Array.isArray(pk)){
+            return await this.DeleteRange(pk);
+        }
+
+        let query = `delete from ${this.TableName} where ${this.PrimaryKey} = @pk`;
+        await this.DB.Query(query, [["@pk", pk]]);
+        return true;
+
+    }
+
+    async DeleteRange(pk: Array<number|string>): Promise<boolean> {
+        
+        let queries: Array<string> = [];
+        let values: Array<[string, any]> = [];
+        
+        pk.forEach((p, i) => {
+            queries.push(`${this.PrimaryKey} = @pk${i}`);
+            values.push([`@pk${i}`, p]);
+        });
+
+        await this.DB.Query(
+            `delete from ${this.TableName} where ${queries.join(" or ")}`,
+            values
+        );
+        return true;
+
     }
 
 }

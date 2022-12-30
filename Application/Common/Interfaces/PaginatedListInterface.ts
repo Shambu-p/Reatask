@@ -6,6 +6,6 @@ export default interface PaginatedListInterface<T> {
     PageSize: number
     TotalCount: number
 
-    Create(list: Array<T>, pageNumber, pageSize): PaginatedListInterface<T>
+    // Create(list: Array<T>, pageNumber: number, pageSize: number): PaginatedListInterface<T>
 
 }

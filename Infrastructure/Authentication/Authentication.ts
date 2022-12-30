@@ -10,7 +10,7 @@ export default class Authentication implements AuthenticationInterface {
     }
 
     LoggedUser<T>(token: string): T {
-        return undefined;
+        throw new Error("not implemented yet!");
     }
 
 }

@@ -1,7 +1,7 @@
 import PaginatedList from "./PaginatedList";
 import RecordsInterface from "../../Application/Common/Interfaces/RecordsInterface";
 
-export default class Records<T> implements RecordsInterface<T>{
+export default class Records<T> implements RecordsInterface<T> {
 
     private readonly Data: Array<T>
 
@@ -30,7 +30,7 @@ export default class Records<T> implements RecordsInterface<T>{
     }
 
     PaginatedList(pageNumber: number, pageSize: number): PaginatedList<T> {
-        return new PaginatedList<T>().Create(this.Data, pageNumber, pageSize)
+        return PaginatedList.Create<T>(this.Data, pageNumber, pageSize)
     }
 
 }
