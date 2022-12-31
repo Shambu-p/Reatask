@@ -1,16 +1,17 @@
 import AuthenticationInterface from "../../Application/Common/Interfaces/AuthenticationInterface";
 
 export default class Authentication implements AuthenticationInterface {
-    Authenticate<T>(user: T): boolean {
-        return false;
-    }
 
-    CheckAuthorization<T>(callback: (user: T) => boolean): boolean {
-        return false;
-    }
+    public static User: string | null = null; 
 
     LoggedUser<T>(token: string): T {
-        throw new Error("not implemented yet!");
+        throw new Error("Method not implemented.");
+    }
+    Authenticate<T>(user: T): { token: string | null; state: boolean; } {
+        throw new Error("Method not implemented.");
+    }
+    GetUser<T>(token: string): T {
+        throw new Error("Method not implemented.");
     }
 
 }

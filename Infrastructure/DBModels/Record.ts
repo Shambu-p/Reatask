@@ -4,9 +4,11 @@ import RecordsInterface from "../../Application/Common/Interfaces/RecordsInterfa
 export default class Records<T> implements RecordsInterface<T> {
 
     private readonly Data: Array<T>
+    public Count: number = 0;
 
     constructor(data: Array<T>) {
         this.Data = data;
+        this.Count = data.length;
     }
 
     First(): (T|null) {

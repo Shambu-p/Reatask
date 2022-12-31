@@ -4,6 +4,7 @@ import fs, { appendFile } from 'fs';
 import InfrastructureLibrary from "./Infrastructure/InfrastructureLibrary";
 import ApplicationLibrary from "./Application/ApplicationLibrary";
 import bodyParser from "body-parser";
+import Authentication from "./Infrastructure/Authentication/Authentication";
 
 const app = express();
 const router = express.Router();
@@ -20,11 +21,14 @@ try{
     app.use(bodyParser.json());
 
     app.use(async (req, res, next) => {
-        console.log("pre pip");
+        console.log(req.headers);
+        console.log("Authentication started ..... ");
+        Authentication.User = "authenticated";
         next();
     });
 
     app.get("/", async (req, res, next) => {
+        console.log(Authentication.User);
         res.json({
             statusCode: 200,
             message: "Wellcome to Retask REST API developed with node js, express using Clean Architecture Design patter."

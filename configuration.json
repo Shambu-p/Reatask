@@ -5,5 +5,10 @@
     "user": "root",
     "password": "password"
   },
+  "auth": {
+    "tokenName": "Authentication",
+    "headerAuth": true,
+    "expireAfter": 2
+  },
   "ServerPort": 5000
 }

@@ -7,6 +7,8 @@ export default class DBTable<T> implements IDBTable<T> {
     private readonly TableName: string
     private readonly PrimaryKey: string
     private readonly DB: Database
+    private change: boolean = true;
+    private records: Record<T> = new Record<T>([]);
 
     constructor(db: Database, name: string, pk = "id") {
         this.TableName = name;
@@ -15,7 +17,14 @@ export default class DBTable<T> implements IDBTable<T> {
     }
 
     async Records(): Promise<Record<T>>{
-        return await this.DB.Query<T>(`select * from ${this.TableName}`);
+        
+        if(this.change){
+            this.records = await this.DB.Query<T>(`select * from ${this.TableName}`);
+            this.change = false;
+        }
+
+        return this.records;
+
     }
 
     async Add<T>(record: (T|Array<T>)): Promise<boolean> {
@@ -31,6 +40,7 @@ export default class DBTable<T> implements IDBTable<T> {
         let query = `insert into ${this.TableName} (${Object.keys(obj).join(", ")}) values ${res.valuesQuery}`;
         await this.DB.Query(query, res.values);
         
+        this.change = true;
         return true;
 
     }
@@ -71,11 +81,6 @@ export default class DBTable<T> implements IDBTable<T> {
             let res = this.getAddSingleQuery(obj, index);
             valuesQuery.push(res.valuesQuery);
             values = {...values, ...res.values}
-            // res.values.forEach(([k, v]) => {
-            //     if(!values.has(k)){
-            //         values.set(k, v)
-            //     }
-            // });
             
         });
         
@@ -83,6 +88,7 @@ export default class DBTable<T> implements IDBTable<T> {
         let query = `insert into ${this.TableName} (${columns.join(", ")}) values ${valuesQuery.join(", ")};`;
 
         await this.DB.Query(query, Array.from(values));
+        this.change = true;
         return true;
         
     }
@@ -95,6 +101,7 @@ export default class DBTable<T> implements IDBTable<T> {
 
         let result = this.getSingleRecordUpdate(new Object(record));
         await this.DB.Query(result.query, result.parameters);
+        this.change = true;
         return true;
 
     }
@@ -146,6 +153,7 @@ export default class DBTable<T> implements IDBTable<T> {
         });
 
         await this.DB.Query(queries.join("; "), values);
+        this.change = true;
         return true;
 
     }
@@ -158,6 +166,7 @@ export default class DBTable<T> implements IDBTable<T> {
 
         let query = `delete from ${this.TableName} where ${this.PrimaryKey} = :pk`;
         await this.DB.Query(query, {"pk": pk});
+        this.change = true;
         return true;
 
     }
@@ -173,6 +182,7 @@ export default class DBTable<T> implements IDBTable<T> {
         });
 
         await this.DB.Query(`delete from ${this.TableName} where ${queries.join(" or ")}`, values);
+        this.change = true;
         return true;
 
     }
