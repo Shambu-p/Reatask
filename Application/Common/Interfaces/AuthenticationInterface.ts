@@ -1,12 +1,13 @@
+import IIdentity from "./IIdentity";
 
 export default interface AuthenticationInterface {
 
-    LoggedUser<T>(token: string): T
-    Authenticate<T>(user: T): {
+    Authorize<T>(token: string): void;
+    Authenticate<T>(logic: (identity: IIdentity) => Promise<T>): Promise<{
         token: string|null
         state: boolean
-    };
-    
+    }>;
+    Authorization<T>(authLogic?: (loggedUser: T) => Promise<boolean>): Promise<void>;
     GetUser<T>(token: string): T
 
 }

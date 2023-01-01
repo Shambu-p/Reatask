@@ -5,6 +5,7 @@ import InfrastructureLibrary from "./Infrastructure/InfrastructureLibrary";
 import ApplicationLibrary from "./Application/ApplicationLibrary";
 import bodyParser from "body-parser";
 import Authentication from "./Infrastructure/Authentication/Authentication";
+import Response from "./Application/Common/Response";
 
 const app = express();
 const router = express.Router();
@@ -21,14 +22,23 @@ try{
     app.use(bodyParser.json());
 
     app.use(async (req, res, next) => {
-        console.log(req.headers);
-        console.log("Authentication started ..... ");
-        Authentication.User = "authenticated";
+
+        let headerMap = new Map<string, any>(Object.entries(req.headers));
+        if(headerMap.has(infrastructure.Authentication.TokenName)){
+            try{
+                let token: string = headerMap.get(infrastructure.Authentication.TokenName);
+                infrastructure.Authentication.Authorize(token);
+
+            }catch(error: any){
+                res.json(Response.responed(`${error.message}, Access Denied!`, 400));
+            }
+        }
+
         next();
+
     });
 
     app.get("/", async (req, res, next) => {
-        console.log(Authentication.User);
         res.json({
             statusCode: 200,
             message: "Wellcome to Retask REST API developed with node js, express using Clean Architecture Design patter."

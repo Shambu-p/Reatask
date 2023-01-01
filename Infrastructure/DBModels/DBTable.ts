@@ -27,7 +27,7 @@ export default class DBTable<T> implements IDBTable<T> {
 
     }
 
-    async Add<T>(record: (T|Array<T>)): Promise<boolean> {
+    async Add(record: (T|Array<T>)): Promise<boolean> {
 
         if(Array.isArray(record)){
             return await this.AddRange(record);
@@ -65,7 +65,7 @@ export default class DBTable<T> implements IDBTable<T> {
 
     }
 
-    private async AddRange<T>(records: Array<T>): Promise<boolean> {
+    private async AddRange(records: Array<T>): Promise<boolean> {
 
         let valuesQuery: Array<string> = [];
         let values = new Map<string, any>();
@@ -93,7 +93,7 @@ export default class DBTable<T> implements IDBTable<T> {
         
     }
 
-    async Update<T>(record: (T|Array<T>)): Promise<boolean> {
+    async Update(record: (T|Array<T>)): Promise<boolean> {
 
         if(Array.isArray(record)){
             return await this.UpdateRange(record);
@@ -138,7 +138,7 @@ export default class DBTable<T> implements IDBTable<T> {
 
     }
 
-    private async UpdateRange<T>(records: Array<T>): Promise<boolean> {
+    private async UpdateRange(records: Array<T>): Promise<boolean> {
 
         let queries: Array<string> = [];
         let values: any = {};

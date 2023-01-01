@@ -18,7 +18,7 @@ export class CreateCategoryLogic implements HandlerInterface<CreateCategoryComma
 
     async Handle(request: CreateCategoryCommand): Promise<Response> {
         
-        this.Database.Categories.Add<Category>({
+        this.Database.Categories.Add({
             Id: null, 
             Name: request.Name
         });
