@@ -4,7 +4,8 @@ const mysql = require('mysql2/promise');
 
 export default class Database {
 
-    public Connection: any = null;
+    public static Connection: any = null;
+    private static isOnTransaction = false;
     private readonly Configuration: any = null;
 
     constructor(configuration: any){
@@ -14,19 +15,67 @@ export default class Database {
     async Query<T>(query: string, param?: (any)): Promise<Records<T>> {
 
         await this.Connect();
-        this.Connection.config.namedPlaceholders = true;
-        const [results, fields] = await this.Connection.execute(query, param ?? {});
-        // console.log(fields[0].name);
+        Database.Connection.config.namedPlaceholders = true;
+        const [results, fields] = await Database.Connection.execute(query, param ?? {});
         return new Records<T>(results);
 
     }
 
     private async Connect(){
         
-        if(!this.Connection){
-            this.Connection = await mysql.createConnection(this.Configuration);
+        if(!Database.Connection){
+            Database.Connection = await mysql.createConnection(this.Configuration);
         }
 
+    }
+
+    async beginTransaction(): Promise<void> {
+        
+        if(!Database.isOnTransaction) {
+            await this.Query(`START TRANSACTION; SAVEPOINT default_savepoint;`);
+            Database.isOnTransaction = true;
+        }
+
+    }
+    
+    async reverse(): Promise<void> {
+        
+        if(Database.isOnTransaction){
+            await this.Query(`ROLLBACK TO default_savepoint; ROLLBACK;`);
+            Database.isOnTransaction = false;
+        }
+
+    }
+
+    async commit(): Promise<void> {
+
+        if(Database.isOnTransaction){
+            await this.Query(`COMMIT;`);
+            Database.isOnTransaction = false;
+        }
+
+    }
+
+    async savePoint(name: string): Promise<void> {
+
+        if(Database.isOnTransaction){
+            await this.Query(`SAVEPOINT :save_point_name;`, {save_point_name: name});
+        }else{
+            await this.Query(`START TRANSACTION; SAVEPOINT default_savepoint; SAVEPOINT :save_point_name;`, {save_point_name: name});
+        }
+
+    }
+
+    async releaseSavePoint(name: string): Promise<void> {
+        if(Database.isOnTransaction){
+            await this.Query(`RELEASE SAVEPOINT :save_point_name;`, {save_point_name: name});
+        }
+    }
+
+    async rollback(name: string) {
+        if (Database.isOnTransaction) {
+            await this.Query(`ROLLBACK TO :save_point_name;`, {save_point_name: name});
+        }
     }
 
 }

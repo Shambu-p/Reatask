@@ -17,7 +17,6 @@ try{
     const infrastructure = InfrastructureLibrary(configuration);
     const application = ApplicationLibrary(infrastructure.Database, infrastructure.Authentication);
 
-    // app.use(cors());
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
@@ -56,7 +55,7 @@ try{
     
     app.listen(port, function () {
         console.log(`api running on port ${port}`);
-    });
+});
 
 } catch(error: any){
     console.log(error.message);

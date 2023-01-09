@@ -1,6 +1,4 @@
 import AuthenticationInterface from "../../Application/Common/Interfaces/AuthenticationInterface";
-import DBContext from "../DBModels/DBContext";
-import DBTable from "../DBModels/DBTable";
 import Identity from "./Identity";
 const jwt = require("jsonwebtoken");
 
@@ -35,7 +33,10 @@ export default class Authentication implements AuthenticationInterface {
             expiresIn: `${this.Expiration}hr`,
         });
 
-        throw new Error("Method not implemented.");
+        return {
+            token: token,
+            state: true
+        }
 
     }
 

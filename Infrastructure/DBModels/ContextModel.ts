@@ -12,4 +12,25 @@ export default class ContextModel {
     public getTable<T>(name: string, pk = "id"): DBTable<T> {
         return new DBTable<T>(this.Database, name, pk);
     }
+
+    async beginTransaction(name: string): Promise<void> {
+        await this.Database.savePoint(name);
+    }
+
+    async rollbackTransaction(name: string): Promise<void> {
+        await this.Database.rollback(name);
+    }
+    
+    async commitTransaction(name: string): Promise<void> {
+        await this.Database.releaseSavePoint(name);
+    }
+
+    async savePoint(name: string): Promise<void> {
+        await this.Database.savePoint(name);
+    }
+
+    async reverse(): Promise<void> {
+        await this.Database.reverse();
+    }
+
 }
