@@ -1,3 +1,4 @@
+import ValidationException from "../Exceptions/ValidationException";
 import ABValidator from "./ABValidator";
 
 export default class NiceValidation<T> {
@@ -13,12 +14,12 @@ export default class NiceValidation<T> {
     public Rule(propertyName: string, callback: (validator: ABValidator) => ABValidator): void {
 
         if(!this.Props.has(propertyName)) {
-            throw new Error(`property named ${propertyName} is not defined!`);
+            throw new ValidationException(`property named ${propertyName} is not defined!`);
         }
 
         let res = callback(new ABValidator(propertyName, this.Props.get(propertyName)));
         if(!res.Result) {
-            throw new Error(res.getMessage());
+            throw new ValidationException(res.getMessage());
         }
 
     }
