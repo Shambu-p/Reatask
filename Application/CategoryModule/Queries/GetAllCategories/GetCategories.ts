@@ -19,7 +19,6 @@ export class GetCategoriesHandler implements HandlerInterface<GetCategories, Pag
     async Handle(request: GetCategories): Promise<PaginatedListInterface<Category>> {
         let categories = await this.Database.Categories.Records();
         return categories.PaginatedList(request.PageNumber, request.PageSize);
-        // return Response.Succeded("operation successful");
     }
 
 }
