@@ -4,7 +4,7 @@
   "description": "web based task management application",
   "main": "server.ts",
   "scripts": {
-    "test": "npx mocha ./test/**/*.ts",
+    "test": "npx mocha ./test/**/*.test.ts",
     "build": "tsc",
     "dev": "nodemon --watch server.ts"
   },
