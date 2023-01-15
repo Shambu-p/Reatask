@@ -6,7 +6,13 @@ class ConfigurationService {
     private readonly FileAddress: string
 
     constructor(fileName: string) {
+
         this.FileAddress = fileName;
+        
+        if(!fs.existsSync(this.FileAddress)){
+            throw new Error(`Configuration file not found`);
+        }
+
     }
 
     getConfiguration<T>(confName: string): T {

@@ -16,7 +16,7 @@ export default class PaginatedList<T> implements PaginatedListInterface<T> {
         let startIndex = (pageNumber - 1) * pageSize;
         let endIndex = startIndex + pageSize;
 
-        if(startIndex < list.length && startIndex >= 0 && endIndex > 0){
+        if((startIndex < list.length || startIndex == 0) && startIndex >= 0 && endIndex > 0){
             this.Items = list.slice(startIndex, (((endIndex + 1) <= list.length) ? endIndex + 1 : list.length));
         } else {
             throw new Error("Incorrect pagination!");

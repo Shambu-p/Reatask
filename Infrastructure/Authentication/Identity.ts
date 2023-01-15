@@ -17,7 +17,7 @@ export default class Identity {
 
         if(!configuration.id || configuration.id == null) {
             throw new Error("identifier 'id' is not set in configuration file under 'Identity' segment");
-        } else if(!configuration.hashed_properties || configuration.id == null) {
+        } else if(!configuration.hashed_properties || configuration.hashed_properties == null) {
             throw new Error("identifier 'hashed_properties' is not set in configuration file under 'Identity' segment");
         } else if(!configuration.table || configuration.table == null) {
             throw new Error("identifier 'table' is not set in configuration file under 'Identity' segment");
