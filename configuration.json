@@ -1,19 +1,21 @@
 {
-  "db": {
-    "host": "localhost",
-    "database": "retask",
-    "user": "root",
-    "password": "password"
-  },
-  "auth": {
-    "token_name": "authentication",
-    "secret_key": "hi_there",
-    "expire_after": 2
-  },
-  "identity": {
-    "hashed_properties": ["Password"],
-    "id": "Id",
-    "table": "Users"
-  },
-  "ServerPort": 5000
+	"db": {
+		"host": "localhost",
+		"database": "retask",
+		"user": "root",
+		"password": "password"
+	},
+	"auth": {
+		"token_name": "authentication",
+		"secret_key": "hi_there",
+		"expire_after": 2
+	},
+	"identity": {
+		"hashed_properties": [
+			"Password"
+		],
+		"id": "Id",
+		"table": "Users"
+	},
+	"ServerPort": 5000
 }

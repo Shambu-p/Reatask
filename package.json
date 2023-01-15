@@ -4,7 +4,7 @@
   "description": "web based task management application",
   "main": "server.ts",
   "scripts": {
-    "test": "node-test",
+    "test": "npx mocha ./test/**/*.ts",
     "build": "tsc",
     "dev": "nodemon --watch server.ts"
   },
@@ -26,14 +26,23 @@
     "fs": "0.0.1-security",
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^2.3.3",
-    "nodemailer": "^6.8.0",
-    "nodemon": "^2.0.20"
+    "nodemailer": "^6.8.0"
   },
   "devDependencies": {
+    "@testdeck/mocha": "^0.3.3",
+    "@types/chai": "^4.3.4",
     "@types/express": "^4.17.15",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.11.17",
     "@types/nodemailer": "^6.4.7",
+    "@types/sinon": "^10.0.13",
+    "chai": "^4.3.7",
     "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "nyc": "^15.1.0",
+    "sinon": "^15.0.1",
+    "test": "^3.2.1",
+    "ts-mockito": "^2.6.1",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   }
