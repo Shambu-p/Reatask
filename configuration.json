@@ -3,7 +3,7 @@
 		"host": "localhost",
 		"database": "retask",
 		"user": "root",
-		"password": "password"
+		"password": "password123?"
 	},
 	"auth": {
 		"token_name": "authentication",
