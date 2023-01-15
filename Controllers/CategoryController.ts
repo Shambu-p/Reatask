@@ -1,11 +1,11 @@
 import {CreateCategoryCommand} from "../Application/CategoryModule/Commands/CreateCategoryCommand/CreateCategoryLogic";
 import Response from "../Application/Common/Response";
 
-module.exports.controller = function (app: any, application: any){
+module.exports.controller = function (app: any, application: any) {
 
     app.get("/api/Category/:pageNumber/:pageSize", async (req: any, res: any, next: any) => {
         try{
-            res.json(await application.getAllCategories({
+            res.json(await application.categoryModule.getAllCategories({
                 PageSize: req.params.pageSize,
                 PageNumber: req.params.pageNumber
             }));
@@ -16,7 +16,7 @@ module.exports.controller = function (app: any, application: any){
     
     app.post("/api/Category", async ({body}: {body: CreateCategoryCommand}, res: any, next: any) => {
         try{
-            res.json(await application.createCategoryRequest(body));
+            res.json(await application.categoryModule.createCategoryRequest(body));
         } catch(error: any){
             res.json(Response.responed(error.message));
         }
