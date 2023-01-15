@@ -1,7 +1,6 @@
 import {expect} from 'chai';
 import {CreateCategoryCommand} from "../../../Application/CategoryModule/Commands/CreateCategoryCommand/CreateCategoryLogic";
 import CreateCategoryValidator from '../../../Application/CategoryModule/Commands/CreateCategoryCommand/CreateCategoryValidator';
-import ValidationException from '../../../Application/Common/Exceptions/ValidationException';
 
 describe('Create Category Validation test', function () {
     
@@ -23,4 +22,20 @@ describe('Create Category Validation test', function () {
         done();
 
     });
+
+    it('should not throw validation Exception', function (done) {
+        
+        let command: CreateCategoryCommand = {
+            Name: "h"
+        };
+
+        let validation: CreateCategoryValidator = new CreateCategoryValidator(command);
+        validation.Validate();
+
+        done();
+
+    });
+
+
+
 });
