@@ -1,16 +1,15 @@
 import ConfigurationService from "./Services/ConfigurationService";
 import express from 'express';
-import fs, { appendFile } from 'fs';
+import fs from 'fs';
 import InfrastructureLibrary from "./Infrastructure/InfrastructureLibrary";
 import ApplicationLibrary from "./Application/ApplicationLibrary";
 import bodyParser from "body-parser";
-import Authentication from "./Infrastructure/Authentication/Authentication";
 import Response from "./Application/Common/Response";
 
 const app = express();
 const router = express.Router();
 
-try{
+try {
 
     const configuration = new ConfigurationService("./configuration.json");
     const port = configuration.getConfiguration("ServerPort");
@@ -20,15 +19,24 @@ try{
     app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
 
+    /**
+     * authentication will be checked here
+     */
     app.use(async (req, res, next) => {
 
+        //get all the headers as map
         let headerMap = new Map<string, any>(Object.entries(req.headers));
-        if(headerMap.has(infrastructure.Authentication.TokenName)){
-            try{
+
+        //check if the header has the authentication key
+        if (headerMap.has(infrastructure.Authentication.TokenName)) {
+            try {
+
+                //get the token based on the developer configuration setup
                 let token: string = headerMap.get(infrastructure.Authentication.TokenName);
+
                 infrastructure.Authentication.Authorize(token);
 
-            }catch(error: any){
+            } catch (error: any) {
                 res.json(Response.responed(`${error.message}, Access Denied!`, 400));
             }
         }
@@ -52,11 +60,11 @@ try{
     });
 
     module.exports = app;
-    
+
     app.listen(port, function () {
         console.log(`api running on port ${port}`);
-});
+    });
 
-} catch(error: any){
+} catch (error: any) {
     console.log(error.message);
 }
