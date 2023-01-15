@@ -1,26 +1,26 @@
 import {expect} from 'chai';
 import {CreateCategoryCommand} from "../../../Application/CategoryModule/Commands/CreateCategoryCommand/CreateCategoryLogic";
 import CreateCategoryValidator from '../../../Application/CategoryModule/Commands/CreateCategoryCommand/CreateCategoryValidator';
+import ValidationException from '../../../Application/Common/Exceptions/ValidationException';
 
-describe('Reatask Test', function () {
+describe('Create Category Validation test', function () {
+    
+    it('should throw validation Error', function (done) {
+        
+        let command: CreateCategoryCommand = {
+            Name: ""
+        };
 
-    describe('sample test', function () {
-        it('should return -1 when the value is not present', function (done) {
-            
-            let command: CreateCategoryCommand = {
-                Name: ""
-            };
+        try {
 
-            try {
-                let validation: CreateCategoryValidator = new CreateCategoryValidator(command);
-                validation.Validate();
-            } catch({message}) {
-                expect(message).to.have.string("parameter length should be at least");
-            }
+            let validation: CreateCategoryValidator = new CreateCategoryValidator(command);
+            validation.Validate();
 
-            done();
+        } catch({message}) {
+            expect(message).to.have.string("parameter length should be at least");
+        }
 
-        });
+        done();
+
     });
-
 });
